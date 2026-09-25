@@ -57,13 +57,17 @@
     color: var(--text-muted);
     margin: 0 0 2rem;
   }
-  header { max-width: 34rem; }
-  .logo-wrap { max-width: 34rem; text-align: center; margin-bottom: 1.5rem; }
+  header { max-width: 34rem; margin: 0 auto; text-align: center; }
+  .logo-wrap { max-width: 34rem; margin: 0 auto; text-align: center; margin-bottom: 1.5rem; }
   .logo-link { display: inline-block; }
-  .logo-img { height: 7.5rem; width: auto; display: block; }
+  .logo-img { height: 7.5rem; width: auto; display: block; margin: 0 auto; }
+  p.lede { margin-left: auto; margin-right: auto; }
   .mode-toggle {
+    display: flex; justify-content: center; margin-bottom: 2.25rem;
+  }
+  .mode-toggle-inner {
     display: inline-flex; border-radius: 4px; overflow: hidden;
-    border: 1px solid var(--border); margin-bottom: 2.25rem;
+    border: 1px solid var(--border);
   }
   .mode-btn {
     padding: 0.5rem 1rem; font-size: 0.875rem; border: none;
@@ -163,6 +167,8 @@
     background: var(--surface); border: 1px solid var(--border);
   }
   .match-name { font-family: "Pacifico", cursive; font-weight: 400; font-size: 1.25rem; margin: 0 0 0.5rem; }
+  .recipe-line { font-size: 0.875rem; margin: 0.5rem 0 0; }
+  .recipe-note { font-size: 0.75rem; color: #6E5F4C; margin: 0.35rem 0 0; }
   .rec-set { margin-top: 3.5rem; border-radius: 6px; overflow: hidden; background: var(--surface); }
   .rec-set-inner { display: flex; flex-direction: column; }
   @media (min-width: 640px) { .rec-set-inner { flex-direction: row; } }
@@ -225,7 +231,8 @@ const CATEGORIES = {
 const SPICES = [
   { id: "cinnamon", name: "Кориця", category: "warm",
     taste: "теплий, солодкий, деревний",
-    foods: ["яблука", "груші", "гарбуз", "шоколад", "кава", "овес", "апельсин"],
+    withForm: "з корицею",
+    foods: ["яблука", "груші", "сливи", "гарбуз", "шоколад", "кава", "овес", "апельсин", "чай"],
     dishes: [
       { name: "Яблучний пиріг", note: "кориця розкривається разом з мускатним горіхом і карамелізованими яблуками" },
       { name: "Вівсянка з грушею і медом", note: "щіпка кориці замінює цукор наполовину" },
@@ -233,7 +240,8 @@ const SPICES = [
     ] },
   { id: "cardamom", name: "Кардамон", category: "warm",
     taste: "свіжий, цитрусово-пряний",
-    foods: ["кава", "цитрусові", "морква", "банан", "рис", "мед", "груша"],
+    withForm: "з кардамоном",
+    foods: ["кава", "цитрусові", "морква", "банан", "рис", "мед", "груші", "сливи", "чай"],
     dishes: [
       { name: "Кардамонові булочки", note: "скандинавська випічка, де кардамон головний, а не фоновий смак" },
       { name: "Морквяний кекс", note: "додає кекс терпкості, яку не дає сама кориця" },
@@ -241,7 +249,8 @@ const SPICES = [
     ] },
   { id: "clove", name: "Гвоздика", category: "warm",
     taste: "гострий, пряний, трохи пекучий",
-    foods: ["яблука", "свинина", "цибуля", "чорнослив", "апельсин", "червона капуста"],
+    withForm: "з гвоздикою",
+    foods: ["яблука", "свинина", "цибуля", "чорнослив", "сливи", "апельсин", "червона капуста", "чай"],
     dishes: [
       { name: "Запечена свинина з яблуками", note: "кілька бутонів гвоздики застромити прямо в шкірку" },
       { name: "Глінтвейн", note: "гвоздика тримає весь напій, поки вино тільки фон" },
@@ -249,6 +258,7 @@ const SPICES = [
     ] },
   { id: "nutmeg", name: "Мускатний горіх", category: "warm",
     taste: "теплий, горіхово-солодкий",
+    withForm: "з мускатним горіхом",
     foods: ["шпинат", "картопля", "молоко", "гарбуз", "банан"],
     dishes: [
       { name: "Соус бешамель", note: "тертий мускат прибирає прісність вершкового соусу" },
@@ -257,6 +267,7 @@ const SPICES = [
     ] },
   { id: "vanilla", name: "Ваніль", category: "warm",
     taste: "солодкий, кремовий",
+    withForm: "з ваніллю",
     foods: ["шоколад", "молоко", "полуниця", "банан", "персик", "кава"],
     dishes: [
       { name: "Крем-брюле", note: "справжній стручок дає крапинки, які видно в кремі" },
@@ -265,7 +276,8 @@ const SPICES = [
     ] },
   { id: "cumin", name: "Кмин (зіра)", category: "seed",
     taste: "земляний, горіхувато-гострий",
-    foods: ["квасоля", "баранина", "картопля", "морква", "йогурт", "рис", "нут"],
+    withForm: "з кмином",
+    foods: ["квасоля", "баранина", "картопля", "морква", "йогурт", "рис", "нут", "сочевиця"],
     dishes: [
       { name: "Плов", note: "зіра — одна з небагатьох спецій, яку кладуть цілою прямо в казан" },
       { name: "Хумус", note: "смажений кмин посипати зверху, а не змішувати з пастою" },
@@ -273,7 +285,8 @@ const SPICES = [
     ] },
   { id: "coriander", name: "Коріандр", category: "seed",
     taste: "цитрусовий, квітковий",
-    foods: ["курка", "риба", "огірки", "лайм", "авокадо", "буряк"],
+    withForm: "з коріандром",
+    foods: ["курка", "риба", "огірки", "лайм", "авокадо", "буряк", "сочевиця"],
     dishes: [
       { name: "Гуакамоле", note: "мелене насіння коріандру, а не листя, дає горіховий відтінок" },
       { name: "Курка тандурі", note: "коріандр і кмин — база маринаду перед куркумою" },
@@ -281,6 +294,7 @@ const SPICES = [
     ] },
   { id: "fennel", name: "Фенхель", category: "seed",
     taste: "анісово-солодкий",
+    withForm: "з фенхелем",
     foods: ["риба", "свинина", "апельсин", "помідори", "ковбаски"],
     dishes: [
       { name: "Запечена риба з фенхелем", note: "насіння в паніровку або цілі стебла під тушку" },
@@ -289,6 +303,7 @@ const SPICES = [
     ] },
   { id: "mustardseed", name: "Гірчичне насіння", category: "seed",
     taste: "гострий, ядучий",
+    withForm: "з гірчичним насінням",
     foods: ["капуста", "картопля", "огірки", "сир", "риба"],
     dishes: [
       { name: "Соління огірків", note: "насіння кладуть у розсіл цілим для хрусткого аромату" },
@@ -297,6 +312,7 @@ const SPICES = [
     ] },
   { id: "peppercorn", name: "Перець горошком", category: "hot",
     taste: "гострий, деревний",
+    withForm: "з перцем горошком",
     foods: ["стейк", "яйця", "сир", "помідори", "полуниця"],
     dishes: [
       { name: "Перцевий стейк", note: "крупно потовчений перець горошком у шкоринці — steak au poivre" },
@@ -305,6 +321,7 @@ const SPICES = [
     ] },
   { id: "chili", name: "Чилі / кайенський перець", category: "hot",
     taste: "пекучий, гострий",
+    withForm: "з чилі",
     foods: ["шоколад", "авокадо", "кукурудза", "манго", "квасоля", "лайм"],
     dishes: [
       { name: "Чилі кон карне", note: "чилі поєднується з кмином і паприкою в один блок смаку" },
@@ -313,6 +330,7 @@ const SPICES = [
     ] },
   { id: "paprika", name: "Паприка", category: "hot",
     taste: "солодкувато-димний",
+    withForm: "з паприкою",
     foods: ["картопля", "курка", "ковбаса", "помідори", "яйця"],
     dishes: [
       { name: "Угорський гуляш", note: "солодка паприка — основа кольору й смаку страви" },
@@ -321,7 +339,8 @@ const SPICES = [
     ] },
   { id: "ginger", name: "Імбир", category: "hot",
     taste: "гострий, свіжий, цитрусовий",
-    foods: ["морква", "гарбуз", "курка", "лимон", "мед", "соя"],
+    withForm: "з імбиром",
+    foods: ["морква", "гарбуз", "курка", "лимон", "мед", "соя", "чай"],
     dishes: [
       { name: "Імбирний чай з медом", note: "свіжий корінь, тонко нарізаний, заливають окропом" },
       { name: "Морквяно-імбирний суп", note: "імбир прибирає приторну солодкість моркви" },
@@ -329,6 +348,7 @@ const SPICES = [
     ] },
   { id: "rosemary", name: "Розмарин", category: "herb",
     taste: "хвойний, смолистий",
+    withForm: "з розмарином",
     foods: ["картопля", "баранина", "оливкова олія", "лимон", "курка"],
     dishes: [
       { name: "Печена картопля з розмарином", note: "гілочки кладуть цілими, щоб не переборщити з ароматом" },
@@ -337,6 +357,7 @@ const SPICES = [
     ] },
   { id: "thyme", name: "Чебрець (тим'ян)", category: "herb",
     taste: "земляний, трав'янистий",
+    withForm: "з чебрецем",
     foods: ["курка", "гриби", "помідори", "яйця", "сир", "квасоля"],
     dishes: [
       { name: "Курка в духовці з тим'яном", note: "гілочки під шкірку дають рівномірний аромат" },
@@ -345,6 +366,7 @@ const SPICES = [
     ] },
   { id: "oregano", name: "Орегано", category: "herb",
     taste: "земляний, гострувато-трав'яний",
+    withForm: "з орегано",
     foods: ["помідори", "моцарела", "оливки", "оливкова олія", "баклажани"],
     dishes: [
       { name: "Піца Маргарита", note: "сушене орегано посипають наприкінці випікання" },
@@ -353,6 +375,7 @@ const SPICES = [
     ] },
   { id: "basil", name: "Базилік", category: "herb",
     taste: "свіжий, солодкувато-трав'яний",
+    withForm: "з базиліком",
     foods: ["помідори", "моцарела", "часник", "лимон", "полуниця", "персик"],
     dishes: [
       { name: "Соус песто", note: "свіже листя, кедрові горіхи, часник і оливкова олія" },
@@ -361,6 +384,7 @@ const SPICES = [
     ] },
   { id: "sage", name: "Шавлія", category: "herb",
     taste: "земляний, злегка гіркуватий",
+    withForm: "з шавлією",
     foods: ["гарбуз", "вершкове масло", "свинина", "картопля"],
     dishes: [
       { name: "Равіолі з гарбузом і шавлією", note: "листя обсмажують у вершковому маслі до хрусткості" },
@@ -369,6 +393,7 @@ const SPICES = [
     ] },
   { id: "majoram", name: "Майоран", category: "herb",
     taste: "теплий, квітково-трав'яний",
+    withForm: "з майораном",
     foods: ["картопля", "квасоля", "ковбаски", "помідори", "гриби"],
     dishes: [
       { name: "Домашні ковбаски", note: "майоран — традиційна спеція для фаршу" },
@@ -377,6 +402,7 @@ const SPICES = [
     ] },
   { id: "parsley", name: "Петрушка", category: "herb",
     taste: "свіжий, трав'янистий",
+    withForm: "з петрушкою",
     foods: ["картопля", "риба", "яйця", "курячий бульйон", "огірки"],
     dishes: [
       { name: "Курячий бульйон", note: "свіже гілля кладуть у бульйон в останні хвилини варіння" },
@@ -385,6 +411,7 @@ const SPICES = [
     ] },
   { id: "dill", name: "Кріп", category: "herb",
     taste: "свіжий, анісово-трав'яний",
+    withForm: "з кропом",
     foods: ["огірки", "риба", "картопля", "сметана", "яйця"],
     dishes: [
       { name: "Малосольні огірки", note: "цілі зонтики кропу кладуть у розсіл" },
@@ -393,7 +420,8 @@ const SPICES = [
     ] },
   { id: "turmeric", name: "Куркума", category: "earthy",
     taste: "земляний, гірчично-теплий",
-    foods: ["рис", "кокосове молоко", "курка", "цвітна капуста", "квасоля"],
+    withForm: "з куркумою",
+    foods: ["рис", "кокосове молоко", "курка", "цвітна капуста", "квасоля", "сочевиця"],
     dishes: [
       { name: "Каррі з куркумою", note: "куркуму обсмажують на олії перед рідиною, щоб розкрити колір" },
       { name: "Золоте молоко", note: "куркума з чорним перцем — перець підсилює засвоєння" },
@@ -401,7 +429,8 @@ const SPICES = [
     ] },
   { id: "curry", name: "Карі лагідна", category: "earthy",
     taste: "теплий, збалансовано-пряний",
-    foods: ["рис", "курка", "кокосове молоко", "цвітна капуста", "картопля"],
+    withForm: "з карі",
+    foods: ["рис", "курка", "кокосове молоко", "цвітна капуста", "картопля", "сочевиця"],
     dishes: [
       { name: "Курка карі", note: "суміш обсмажують на олії перед додаванням рідини" },
       { name: "Овочеве раґу карі", note: "м'яка версія без гостроти, підходить дітям" },
@@ -409,6 +438,7 @@ const SPICES = [
     ] },
   { id: "garlic", name: "Часник сушений", category: "earthy",
     taste: "гострий, пікантний",
+    withForm: "з часником",
     foods: ["картопля", "хліб", "м'ясо", "томатні соуси", "гриби"],
     dishes: [
       { name: "Часниковий хліб", note: "сушений часник рівномірно розподіляється в маслі" },
@@ -631,12 +661,13 @@ const PRODUCT_CATEGORIES = {
   fruit: { label: "Фрукти та ягоди", color: "#C1440E" },
   veg: { label: "Овочі та зелень", color: "#6E8B5E" },
   meat: { label: "М'ясо, риба, яйця", color: "#8C1C13" },
-  other: { label: "Молочне, крупи та інше", color: "#A9762F" },
+  dairy: { label: "Молочне", color: "#B08D57" },
+  other: { label: "Крупи та інше", color: "#A9762F" },
 };
 
 
 const PRODUCT_CATEGORY_MAP = {
-  "яблука": "fruit", "груші": "fruit", "груша": "fruit", "апельсин": "fruit", "банан": "fruit",
+  "яблука": "fruit", "груші": "fruit", "сливи": "fruit", "апельсин": "fruit", "банан": "fruit",
   "персик": "fruit", "лимон": "fruit", "полуниця": "fruit", "манго": "fruit", "лайм": "fruit",
   "цитрусові": "fruit",
   "гарбуз": "veg", "морква": "veg", "цибуля": "veg", "червона капуста": "veg", "капуста": "veg",
@@ -644,10 +675,46 @@ const PRODUCT_CATEGORY_MAP = {
   "баклажани": "veg", "цвітна капуста": "veg", "помідори": "veg", "часник": "veg", "гриби": "veg",
   "свинина": "meat", "баранина": "meat", "курка": "meat", "риба": "meat", "стейк": "meat",
   "м'ясо": "meat", "ковбаса": "meat", "ковбаски": "meat", "курячий бульйон": "meat", "яйця": "meat",
-  "сир": "other", "молоко": "other", "йогурт": "other", "вершкове масло": "other", "сметана": "other",
+  "сир": "dairy", "молоко": "dairy", "йогурт": "dairy", "вершкове масло": "dairy", "сметана": "dairy",
+  "моцарела": "dairy", "кокосове молоко": "dairy",
   "рис": "other", "овес": "other", "нут": "other", "квасоля": "other", "хліб": "other",
-  "шоколад": "other", "кава": "other", "мед": "other", "оливкова олія": "other", "оливки": "other",
-  "моцарела": "other", "томатні соуси": "other", "соя": "other", "кокосове молоко": "other",
+  "сочевиця": "other", "чай": "other", "шоколад": "other", "кава": "other", "мед": "other",
+  "оливкова олія": "other", "оливки": "other", "томатні соуси": "other", "соя": "other",
+};
+
+
+const COOKING_TIPS = {
+  meat: "замаринуйте зі спецією хвилин на 30 перед приготуванням — аромат розкриється глибше",
+  veg: "додайте спецію під час тушкування або запікання, а не на самому початку",
+  fruit: "підійде для випічки, компоту чи десерту — додайте спецію ближче до кінця",
+  dairy: "спробуйте додати спецію в соус, заправку чи сирну масу — молочне добре тримає аромат",
+  other: "додайте наприкінці приготування, щоб зберегти аромат спеції",
+};
+
+
+const PRODUCT_TIPS = {
+  "сир": "посипте спецією нарізаний сир або вмішайте в сирну масу — чудова основа для канапок і сирних кульок",
+  "молоко": "прогрійте молоко зі спецією кілька хвилин на слабкому вогні — вийде основа для латте або десерту",
+  "йогурт": "додайте спецію в йогурт — вийде заправка для овочевого салату, соус до м'яса або легкий десерт",
+  "вершкове масло": "змішайте спецію з розм'якшеним маслом — ароматизоване масло для хліба, м'яса чи овочів",
+  "сметана": "додайте спецію в сметану — вийде соус до вареників, млинців або борщу",
+  "моцарела": "посипте спецією скибки моцарели з томатами — швидка закуска на кшталт капрезе",
+  "кокосове молоко": "проваріть спецію в кокосовому молоці кілька хвилин — основа для каррі чи крем-супу",
+  "рис": "додайте спецію просто у воду під час варіння рису — вийде ароматний гарнір",
+  "овес": "додайте спецію в кашу під час варіння або в готову вівсянку",
+  "нут": "додайте спецію під час тушкування нуту — основа для хумусу чи нутового каррі",
+  "квасоля": "додайте спецію в тушковану квасолю ближче до кінця приготування",
+  "хліб": "додайте спецію в тісто перед випіканням або посипте нею скибку перед подачею",
+  "сочевиця": "додайте спецію під час варіння сочевиці — класична основа для дала чи супу",
+  "чай": "заваріть спецію разом із чаєм — вийде пряний чай на кшталт чаю масала",
+  "шоколад": "додайте спецію в розтоплений шоколад або гарячий шоколад",
+  "кава": "додайте щіпку спеції прямо під час заварювання кави",
+  "мед": "змішайте спецію з медом — заправка для десертів, чаю або запечених овочів",
+  "оливкова олія": "настоюйте спецію в оливковій олії кілька днів — вийде ароматизована заправка",
+  "оливки": "додайте спецію до оливок як швидкий маринад для закуски",
+  "томатні соуси": "додайте спецію під час тушкування соусу, а не в самому кінці",
+  "соя": "додайте спецію в соєвий соус для маринаду до м'яса чи риби",
+  "яйця": "додайте спецію до жовтків перед смаженням яєчні або в яєчний салат",
 };
 
 
@@ -735,10 +802,10 @@ function getProductsByCategory() {
 }
 function getMatchedSpicesFromProducts() {
   if (selectedProducts.length === 0) return [];
-  return SPICES.map((s) => ({
-    spice: s,
-    count: s.foods.filter((f) => selectedProducts.includes(f)).length,
-  }))
+  return SPICES.map((s) => {
+    const matchedFoods = s.foods.filter((f) => selectedProducts.includes(f));
+    return { spice: s, count: matchedFoods.length, matchedFoods };
+  })
     .filter((m) => m.count > 0)
     .sort((a, b) => b.count - a.count);
 }
@@ -761,10 +828,10 @@ const X_SVG =
   '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
 
 function renderModeToggle() {
-  return `<div class="mode-toggle">
+  return `<div class="mode-toggle"><div class="mode-toggle-inner">
     <button class="mode-btn ${mode === "spice" ? "mode-btn-active" : ""}" onclick="setMode('spice')">Шукаю за спецією</button>
     <button class="mode-btn ${mode === "product" ? "mode-btn-active" : ""}" onclick="setMode('product')">Шукаю за продуктом</button>
-  </div>`;
+  </div></div>`;
 }
 
 function renderPicker() {
@@ -832,7 +899,7 @@ function renderSpiceModeResults() {
   const foodCounts = getFoodCounts(selSpices);
   const matchedCombos = getMatchedCombos();
 
-  let html = `<div class="selected-summary">`;
+  let html = `<h2 class="section-title">Ви обрали:</h2><div class="selected-summary">`;
   selSpices.forEach((s) => {
     html += `<span class="selected-tag">${esc(s.name)}
       <button onclick="toggleSpice('${s.id}')" class="remove-btn">${X_SVG}</button>
@@ -900,7 +967,7 @@ function renderProductModeResults() {
 
   const matched = getMatchedSpicesFromProducts();
 
-  let html = `<div class="selected-summary">`;
+  let html = `<h2 class="section-title">Ви обрали:</h2><div class="selected-summary">`;
   selectedProducts.forEach((food) => {
     html += `<span class="selected-tag">${esc(food)}
       <button onclick="toggleProduct('${food}')" class="remove-btn">${X_SVG}</button>
@@ -908,21 +975,21 @@ function renderProductModeResults() {
   });
   html += `</div>`;
 
-  html += `<section><h2 class="section-title">Спеції, які підійдуть</h2>`;
+  html += `<section><h2 class="section-title">Спеції, які підійдуть — і що з ними приготувати</h2>`;
   if (matched.length === 0) {
     html += `<p class="hint-text">Для цих продуктів у базі поки немає підходящих спецій.</p>`;
   } else {
     html += `<div class="per-spice-list">`;
-    matched.forEach(({ spice, count }) => {
+    matched.forEach(({ spice, count, matchedFoods }) => {
+      const titleFoods = matchedFoods.join(" та ");
+      const title = titleFoods.charAt(0).toUpperCase() + titleFoods.slice(1) + " " + spice.withForm;
+      const tip = PRODUCT_TIPS[matchedFoods[0]] || COOKING_TIPS[PRODUCT_CATEGORY_MAP[matchedFoods[0]] || "other"];
       html += `<div class="match-card">
         <p class="match-name" style="color:${CATEGORIES[spice.category].color}">${esc(spice.name)}
           <span class="per-spice-taste">· ${esc(spice.taste)}${count >= 2 ? ` · збіг ×${count}` : ""}</span>
         </p>
-        <ul class="dish-list">`;
-      spice.dishes.slice(0, 2).forEach((d) => {
-        html += `<li><span class="dish-name">${esc(d.name)}</span> <span class="dish-note-muted">— ${esc(d.note)}</span></li>`;
-      });
-      html += `</ul></div>`;
+        <p class="recipe-line"><span class="dish-name">${esc(title)}</span> <span class="dish-note-muted">— ${esc(tip)}</span></p>
+      </div>`;
     });
     html += `</div>`;
   }
